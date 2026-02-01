@@ -13,7 +13,7 @@ This guide will help you get up and running with BTW (Bring The Workflow) in min
 ### From npm (Recommended)
 
 ```bash
-npm install -g btw
+npm install -g @sanarberkebayram/btw
 ```
 
 ### From Source

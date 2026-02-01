@@ -15,7 +15,7 @@ BTW lets you share and manage AI coding workflows across different tools (Claude
 ## Installation
 
 ```bash
-npm install -g btw
+npm install -g @sanarberkebayram/btw
 ```
 
 **Requirements:**

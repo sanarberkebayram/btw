@@ -1,5 +1,5 @@
 {
-  "name": "btw",
+  "name": "@sanarberkebayram/btw",
   "version": "0.1.0",
   "description": "Bring The Workflow - AI-aware agent, file, and workflow package manager",
   "type": "module",
