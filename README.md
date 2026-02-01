@@ -48,6 +48,7 @@ btw remove game-agent
 | `btw inject -i` | Interactive mode - toggle inject/remove workflows |
 | `btw update [id]` | Update workflow(s) from source |
 | `btw remove <id>` | Remove an installed workflow |
+| `btw uninstall` | Uninstall BTW and remove all workflows |
 
 ### Examples
 

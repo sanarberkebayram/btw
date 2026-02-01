@@ -13,6 +13,7 @@ import { createListCommand } from './commands/list.js';
 import { createInjectCommand } from './commands/inject.js';
 import { createRemoveCommand } from './commands/remove.js';
 import { createUpdateCommand } from './commands/update.js';
+import { createUninstallCommand } from './commands/uninstall.js';
 import { output } from './utils/output.js';
 import { checkForUpdates } from './utils/updateChecker.js';
 
@@ -67,6 +68,7 @@ function createProgram(): Command {
   program.addCommand(createInjectCommand());
   program.addCommand(createRemoveCommand());
   program.addCommand(createUpdateCommand());
+  program.addCommand(createUninstallCommand());
 
   // Add help examples
   program.addHelpText('after', `
@@ -75,10 +77,12 @@ Examples:
   $ btw add git@github.com:org/wf   Add a workflow from git
   $ btw list                        List installed workflows
   $ btw inject my-workflow          Inject workflow into Claude
+  $ btw inject -i                   Interactive inject mode
   $ btw inject my-wf -t cursor      Inject into Cursor
   $ btw update my-workflow          Update a workflow from source
   $ btw update --all                Update all workflows
   $ btw remove my-workflow          Remove a workflow
+  $ btw uninstall                   Uninstall BTW and all workflows
 
 Documentation:
   https://github.com/sanarberkebayram/btw
