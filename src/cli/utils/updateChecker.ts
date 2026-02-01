@@ -9,16 +9,27 @@ import chalk from 'chalk';
 import semver from 'semver';
 
 const PACKAGE_NAME = '@sanarberkebayram/btw';
+const FETCH_TIMEOUT = 5000; // 5 seconds
+const PROMPT_TIMEOUT = 30000; // 30 seconds
 
 /**
- * Fetch the latest version from npm registry
+ * Fetch the latest version from npm registry with timeout
  */
 async function getLatestVersion(): Promise<string | null> {
   try {
-    const response = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}/latest`);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), FETCH_TIMEOUT);
+
+    const response = await fetch(`https://registry.npmjs.org/${PACKAGE_NAME}/latest`, {
+      signal: controller.signal,
+    });
+
+    clearTimeout(timeoutId);
+
     if (!response.ok) {
       return null;
     }
+
     const data = await response.json();
     return data.version || null;
   } catch {
@@ -28,19 +39,53 @@ async function getLatestVersion(): Promise<string | null> {
 }
 
 /**
- * Prompt user for confirmation
+ * Prompt user for confirmation with timeout
  */
 function askUser(question: string): Promise<boolean> {
-  const rl = readline.createInterface({
-    input: process.stdin,
-    output: process.stdout,
-  });
-
   return new Promise((resolve) => {
+    let resolved = false;
+
+    const rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    });
+
+    // Set a timeout to auto-skip if no response
+    const timeoutId = setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        console.log(chalk.gray('\n  No response, skipping update.'));
+        rl.close();
+        resolve(false);
+      }
+    }, PROMPT_TIMEOUT);
+
     rl.question(question, (answer) => {
-      rl.close();
-      const normalized = answer.toLowerCase().trim();
-      resolve(normalized === 'y' || normalized === 'yes');
+      if (!resolved) {
+        resolved = true;
+        clearTimeout(timeoutId);
+        rl.close();
+        const normalized = answer.toLowerCase().trim();
+        resolve(normalized === 'y' || normalized === 'yes');
+      }
+    });
+
+    // Handle close event (e.g., Ctrl+C)
+    rl.on('close', () => {
+      clearTimeout(timeoutId);
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
+      }
+    });
+
+    // Handle errors
+    rl.on('error', () => {
+      clearTimeout(timeoutId);
+      if (!resolved) {
+        resolved = true;
+        resolve(false);
+      }
     });
   });
 }
@@ -51,7 +96,10 @@ function askUser(question: string): Promise<boolean> {
 function runUpdate(): boolean {
   try {
     console.log(chalk.blue('ℹ'), 'Updating BTW...\n');
-    execSync(`npm install -g ${PACKAGE_NAME}@latest`, { stdio: 'inherit' });
+    execSync(`npm install -g ${PACKAGE_NAME}@latest`, {
+      stdio: 'inherit',
+      timeout: 120000, // 2 minute timeout
+    });
     console.log();
     console.log(chalk.green('✓'), 'BTW has been updated successfully!');
     console.log(chalk.gray('  Please restart BTW to use the new version.\n'));
@@ -75,7 +123,7 @@ export async function checkForUpdates(currentVersion: string): Promise<boolean> 
   }
 
   // Skip if not running in a TTY (e.g., piped output)
-  if (!process.stdin.isTTY) {
+  if (!process.stdin.isTTY || !process.stdout.isTTY) {
     return false;
   }
 
