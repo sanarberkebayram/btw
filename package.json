@@ -1,0 +1,77 @@
+{
+  "name": "btw",
+  "version": "0.1.0",
+  "description": "Bring The Workflow - AI-aware agent, file, and workflow package manager",
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "btw": "dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "start": "node dist/cli/index.js",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "lint": "eslint src --ext .ts",
+    "lint:fix": "eslint src --ext .ts --fix",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "format:check": "prettier --check \"src/**/*.ts\"",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "cli",
+    "workflow",
+    "ai",
+    "agent",
+    "claude",
+    "cursor",
+    "windsurf",
+    "copilot",
+    "codex",
+    "package-manager",
+    "llm",
+    "prompt",
+    "ai-tools"
+  ],
+  "author": "sanarberkebayram",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sanarberkebayram/btw.git"
+  },
+  "homepage": "https://github.com/sanarberkebayram/btw#readme",
+  "bugs": {
+    "url": "https://github.com/sanarberkebayram/btw/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "ora": "^8.0.1",
+    "semver": "^7.6.0",
+    "simple-git": "^3.24.0",
+    "yaml": "^2.4.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/node": "^20.11.30",
+    "@types/semver": "^7.5.8",
+    "@typescript-eslint/eslint-plugin": "^7.3.1",
+    "@typescript-eslint/parser": "^7.3.1",
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "tsup": "^8.0.2",
+    "typescript": "^5.4.3",
+    "vitest": "^1.4.0"
+  }
+}
