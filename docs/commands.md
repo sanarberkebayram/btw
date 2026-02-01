@@ -245,7 +245,7 @@ btw remove game-agent --purge
 
 ## btw update
 
-Update installed workflows from their source repositories.
+Update installed workflows from their source repositories and re-inject them.
 
 ### Usage
 
@@ -264,11 +264,13 @@ btw update [workflow-id] [options]
 | Option | Description |
 |--------|-------------|
 | `-a, --all` | Update all installed workflows |
+| `--no-inject` | Skip re-injecting after update |
+| `-t, --target <target>` | Target for re-injection (uses last injected target by default) |
 
 ### Examples
 
 ```bash
-# Update a specific workflow
+# Update a specific workflow (pulls + re-injects)
 btw update game-agent
 
 # Update all installed workflows
@@ -276,6 +278,12 @@ btw update --all
 
 # Update all (shorthand - no args defaults to all)
 btw update
+
+# Update without re-injecting
+btw update game-agent --no-inject
+
+# Update and inject to a specific target
+btw update game-agent --target cursor
 ```
 
 ### Behavior
@@ -283,13 +291,15 @@ btw update
 1. Fetches the latest changes from the source repository (git pull)
 2. Re-parses the manifest to get updated version
 3. Updates the workflow state with new version and commit hash
-4. Displays summary of changes
+4. **Re-injects the workflow** if it was previously injected (unless `--no-inject`)
+5. Displays summary of changes
 
 ### Notes
 
 - Only workflows installed from Git repositories can be updated
 - Local workflows (installed from local paths) will be skipped
 - The update performs a `git pull` on the workflow directory
+- Re-injection uses the same target as the last injection, or falls back to the first supported target
 
 ---
 
